@@ -121,9 +121,9 @@ def automated_testcases():
     timed_mountains(1000, 100)
     timed_mountains(2000, 100)
     timed_mountains(3000, 100)
-    timed_mountains(4000, 100)
-    timed_mountains(5000, 100)
-    timed_mountains(10 ** 4, 100)
+    # timed_mountains(4000, 100)
+    # timed_mountains(5000, 100)
+    # timed_mountains(10 ** 4, 100)
 
 def timed_mountains(n, k):
     nums = auto_generate_mountains(n, k)
