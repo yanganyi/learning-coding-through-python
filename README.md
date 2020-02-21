@@ -28,9 +28,6 @@ These courses covers much more topics than Scratch.
 #### Coding Game on codecombat.com
 I had fun playing the strategy coding game on codecombat.com. I was a [level 23 player](https://codecombat.com/user/yanganyi) on [codecombat](https://codecombat.com). I stopped playing it in Primary 6 to prepare my PSLE.
 
-#### Web Portal Content Management
-I helped my mom build a website for her education business [http://www.happysesame.com/](http://www.happysesame.com/). I designed most menu and pages on this website.
-
 #### Robotics
 I created many robots/machines using lego. I played Xiaomi programmable robot and learned how to use code to control robots' movements.
 
