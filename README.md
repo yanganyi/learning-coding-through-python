@@ -1,6 +1,6 @@
 ## Why this repo?
 
-Hi this is Yang An Yi. The main reason I created this repository is to showcase what I have achieved in the past 2 years. My father helped me in creating this repository on his github account. He guided me in writing this markdown file.
+Hi The main reason I created this repository is to showcase what I have achieved in the past 2 years. My father helped me in creating this repository on his github account. He guided me in writing this markdown file.
 
 _This was intially part of a bigger and much older family private repository. The relevant contents were duplicated and moved to this public repository for Hwa Chong EC3 CCA application. - An Yi's father_
 
