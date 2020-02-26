@@ -5,7 +5,8 @@
 
 import math
 
-def find_my_As():
+
+def find_my_integer():
     number = 0
     for i in range(1,5001):
         a = i + 100
@@ -18,4 +19,6 @@ def find_my_As():
             number += 1
     return number
 
-print(find_my_As())
+
+print(find_my_integer())
+
