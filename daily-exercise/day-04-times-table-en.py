@@ -16,7 +16,7 @@ def second_try():
     for i in range (1,10):
         print() # newline
         for j in range(1,i+1):
-            print('{}+{}={}'.format(i,j,i*j),end=' ')
+            print('{}*{}={}'.format(i,j,i*j),end=' ')
 
 second_try()
 

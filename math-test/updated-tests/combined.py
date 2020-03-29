@@ -12,6 +12,8 @@ def pretty(string):
         return string
     elif length == 14:
         return string + ' '
+    elif length == 13:
+        return string + '  '
 
 
 def math(n):
@@ -41,6 +43,9 @@ def my_math(n):
     z = 3 * c
     if d < 10:
         return my_math(n)
+    if n == 3:
+        if d / a - c < 0:
+            return my_math(n)
     a = str(a)
     b = str(b)
     c = str(c)
@@ -57,18 +62,20 @@ def my_math(n):
         times =  x == 1
         add =  y == 1
         if times and add:
-            write = pretty(d +'*' + a + '+' + z + EQUAL_MSG)
+            write = pretty(b +'*' + a + '+' + z + EQUAL_MSG)
         elif times:
-            write = pretty(d +'*' + a + '-' + c + EQUAL_MSG)
+            write = pretty(b +'*' + a + '-' + c + EQUAL_MSG)
         elif add:
             write = pretty(d +'/' + a + '+' + z + EQUAL_MSG)
         else:
             write = pretty(d +'/' + a + '-' + c + EQUAL_MSG)
+
     return write
 
 def final():
     n = 1
-    file = open("final", "w")
+    output_file = "final.txt"
+    file = open(output_file, "w")
     for i in range(3):
         for j in range(8):
             if n == 1:
@@ -81,12 +88,13 @@ def final():
                 write = my_math(n)
                 file.write(write)
             file.write("\n\n")
-        file.write("\n\n\n")
+        file.write("\n\n")
         n += 1
-
 
 
 # math(1)
 # math(2)
 # math(3)
 final()
+
+# TODO: dad to refactor together with ron
