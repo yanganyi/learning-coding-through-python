@@ -1,4 +1,5 @@
 
+# === Iterative Mode ===
 # while True:
 #     expression = input("Calculate (type 'exit' to exit): ")
 #     if expression == 'exit':
@@ -8,50 +9,65 @@
 
 operators = ['+', '-', '*', '/']
 
-def verify(exp,ans):
-    a = float(calculator(exp))
-    if a != ans:
-        print('Something went wrong! The answer given was',a,'but the correct answer is',ans,'.')
 
-def calculate(exp):
-    x = exp.split(' ')
-    n = []
-    n.append(int(x[0]))
-    n.append(x[1])
-    n.append(int(x[2]))
-    if n[1] == '+':
-        return str(n[0]+n[2])
-    elif n[1] == '-':
-        return str(n[0]-n[2])
-    elif n[1] == '*':
-        return str(n[0]*n[2])
-    elif n[1] == '/':
-        return str(n[0]/n[2])
 
-def calculator(exp):
-    x = exp.split(' ')
-    length = len(x)
-    if length%2 == 0:
-        print("Some error occurred in the calculator function.")
+def _precedence_level(op):
+    lvl3 = ['^']
+    lvl2 = ['*','/']
+    lvl1 = ['+','-']
+    if op in lvl1:
+        return 1
+    elif op in lvl2:
+        return 2
+    elif op in lvl3:
+        return 3
     else:
-        noOfOperations = int((length-1) / 2)
-        result = x[0]
-        cursor = 1
-        for i in range(noOfOperations):
-            string = result + ' ' + x[cursor] + ' ' + x[cursor+1]
-            result = calculate(string)
-            cursor += 2
+        return -1
 
-        return result
+def _precedence(op1, op2):
+    op1_lvl = _precedence_level(op1)
+    op2_lvl = _precedence_level(op2)
+    if op1_lvl > op2_lvl:
+        return 1
+    elif op1_lvl == op2_lvl:
+        return 0
+    elif op1_lvl < op2_lvl:
+        return -1
 
+# this function returns True when we need to pop
+def _check_pop(op, stack):
+    return len(stack) > 0 and _precedence(op, stack[-1]) != 1
 
-##### ====== serious business
+# split an expression (string) to a infix expression (list)
+def preprocess(exp_str):
+    # TODO: to split by all supported operators
+    infix = exp_str.split(' ')
+    return infix
 
-# also called reversed polish notation (RPN) or postfix notation
+# convert a infix expression (list) to a postfix expression (list)
+# it is a simplified version of the shunting yard algorithm
+def convert_infix_to_postfix(infix):
+    operator_stack = []
+    postfix = []
+    for i in infix:
+        if i not in operators:  # if i is an operand (number)
+            postfix.append(i)
+        else:
+            while _check_pop(i, operator_stack):
+                postfix.append(operator_stack.pop())
+            operator_stack.append(i)
+
+    while len(operator_stack) > 0:
+        postfix.append(operator_stack.pop())
+
+    # print(' '.join(postfix))
+    return postfix
+
+# evaluate the postfix expression to a int/float number
+# postfix is also called reversed polish notation (RPN)
 def evaluate_postfix(exp):
-    x = exp.split(' ')
     stack = []
-    for i in x:
+    for i in exp:
         if i in operators:
             operand1 = int(stack.pop())
             operand2 = int(stack.pop())
@@ -71,71 +87,34 @@ def evaluate_postfix(exp):
     return stack[0]
 
 
-def op_stack(obj,stack,output):
-    length = len(stack)
-    if length > 0:
-        a = precedence(obj,stack[-1])
-        if a == 1:
-            stack.append(obj)
-        else:
-            # TODO (ron): while true: loop until ...
-            for i in range(0,length,-1):
-                a = precedence(obj,stack[i])
-                if a < 1:
-                    output += stack[i]  # TODO (ron): change it to append instead
-                    stack.pop(i)
-            stack.append(obj)
-    else:
-        stack.append(obj)
-    return stack,output
-
-
-# shunting yard algorithm
-def convert_infix_to_postfix(exp):
-    x = exp.split(' ')
-    operator_stack = []
-    output = '' # TODO (ron): change it to a list
-    for i in x:
-        if i in operators:
-            operator_stack,output = op_stack(i,operator_stack,output)
-        else:
-            output = output + i # TODO (ron): append to a list instead
-    # TODO (ron): process the remaining elements in stack here
-    return output
-
-print(convert_infix_to_postfix("1 + 2"))
-
-
-
-
-
-
-def evaluate_infix(e):
-    postfix_e = convert_infix_to_postfix(e)
+def evaluate_infix(exp_str):
+    infix_e = preprocess(exp_str)
+    postfix_e = convert_infix_to_postfix(infix_e)
     result = evaluate_postfix(postfix_e)
     return result
 
+# print(convert_infix_to_postfix("1 + 2"))
+# print(convert_infix_to_postfix("1 + 2 + 3"))
+# print(convert_infix_to_postfix("1 + 2 * 3 + 4"))
+# print(convert_infix_to_postfix("1 * 2 + 3 * 4"))
+# print(convert_infix_to_postfix("1 + 2 + 3 * 4"))
+# print(convert_infix_to_postfix("1 * 2 * 3 + 4"))
 
-def precedence(op1,op2):
-    op1_lvl = lvl_precedence(op1)
-    op2_lvl = lvl_precedence(op2)
-    if op1_lvl > op2_lvl:
-        return 1
-    elif op1_lvl == op2_lvl:
-        return 0
-    elif op1_lvl < op2_lvl:
-        return -1
+print(evaluate_infix("1 + 2"))
+print(evaluate_infix("1 + 2 * 3 + 4"))
+print(evaluate_infix("1 * 2 + 3 * 4"))
+print(evaluate_infix("1 + 2 + 3 * 4"))
+print(evaluate_infix("1 * 2 * 3 + 4"))
 
-def lvl_precedence(op):
-    lvl3 = ['^']
-    lvl2 = ['*','/']
-    lvl1 = ['+','-']
-    if op in lvl1:
-        return 1
-    elif op in lvl2:
-        return 2
-    elif op in lvl3:
-        return 3
+print(evaluate_infix("1+2+3"))
+
+
+
+
+
+
+
+
 
 # print("expected wrong answers")
 # verify("2 + 1",0)
@@ -164,10 +143,6 @@ def lvl_precedence(op):
 # verify('1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10',55)
 # verify('1 * 2 * 3 * 4 * 5',120)
 
-# exp = 'hello + bye'
-# x = exp.split(' ')
-# print(x[1])
-# print(type(1+2))
 
 # print(evaluate_postfix('1 2 + 3 * 4 +'))
 # print(evaluate_postfix('1 2 3 * + 4 +'))
@@ -176,27 +151,17 @@ def lvl_precedence(op):
 # print(evaluate_postfix('1 2 + 3 / 4 *'))
 # print(evaluate_postfix('3 1 2 + * 4 * 6 / 7 + 8 9 * -'))
 
-# print(precedence('+','+'))
 # print(precedence('+','-'))
-# print(precedence('+','*'))
-# print(precedence('+','/'))
 # print(precedence('-','+'))
-# print(precedence('-','-'))
-# print(precedence('-','*'))
-# print(precedence('-','/'))
-# print(precedence('*','+'))
-# print(precedence('*','-'))
-# print(precedence('*','*'))
-# print(precedence('*','/'))
-# print(precedence('/','+'))
+# print(precedence('+','*'))
 # print(precedence('/','-'))
-# print(precedence('/','*'))
-# print(precedence('/','/'))
-#
+# print(precedence('*','/'))
+
 # print(precedence('+','^'))
 # print(precedence('^','+'))
 # print(precedence('^','/'))
 # print(precedence('-','^'))
 
-# 0 0 -1 -1 0 0 -1 -1 1 1 0 0 1 1 0 0
-# -1 1 1 -1
+
+# a = precedence(op,stack[-1]) != 1
+

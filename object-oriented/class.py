@@ -106,7 +106,6 @@ new_emp_1 = Employee.from_string(emp_str_1)
 # print(Employee.is_workday(my_date))
 #
 #
-#
 # print(dev_1.pay)
 # dev_1.apply_raise()
 # print(dev_1.pay)
@@ -114,13 +113,11 @@ new_emp_1 = Employee.from_string(emp_str_1)
 # print(dev_2.prog_lang)
 #
 #
-#
 # print(man_1.print_emps())
 # man_1.add_emp(dev_2)
 # print(man_1.print_emps())
 # man_1.remove_emp(dev_1)
 # print(man_1.print_emps())
-#
 #
 #
 # print(isinstance(man_1,Manager))
