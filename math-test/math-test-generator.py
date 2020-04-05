@@ -150,6 +150,10 @@ app = Flask('main')
 
 @app.route('/')
 def pdf():
+    return "Hello world!"
+
+@app.route('/test')
+def pdf():
     t = Test()
     t.generate_test()
     return send_file('final.pdf')
