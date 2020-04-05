@@ -1,7 +1,7 @@
+# import datetime
 from random import *
-import datetime
 from fpdf import FPDF
-
+from flask import *
 
 class QuestionBank:
 
@@ -63,80 +63,99 @@ class QuestionBank:
             invalid = True
         return invalid
 
+class Test:
 
-OUTPUT_TXT_FILE = 'temp.txt'
-OUTPUT_PDF_FILE = 'final.pdf'
-LEN_OF_COL = 10
-LEN_OF_COL_MIX = 12
+    OUTPUT_TXT_FILE = 'temp.txt'
+    OUTPUT_PDF_FILE = 'final.pdf'
+    LEN_OF_COL = 10
+    LEN_OF_COL_MIX = 12
+
+    def __init__(self):
+        pass
 
 
-def output_to_text_file(qlist, qtype, file):
+    def output_to_text_file(self,qlist, qtype, file):
 
-    END_OF_LINE = '\n'
+        END_OF_LINE = '\n'
 
-    if qtype == QuestionBank.QTYPE_MIX:
-        columns = 5
-        length_of_col = LEN_OF_COL_MIX
-    else:
-        columns = 6
-        length_of_col = LEN_OF_COL
+        if qtype == QuestionBank.QTYPE_MIX:
+            columns = 5
+            length_of_col = self.LEN_OF_COL_MIX
+        else:
+            columns = 6
+            length_of_col = self.LEN_OF_COL
 
-    no_of_q = len(qlist)
-    cursor = 0
-    rows = int(no_of_q / columns)
-    for i in range(rows):
-        for j in range(columns):
-            s = qlist[cursor].ljust(length_of_col)
-            file.write(s)
-            cursor += 1
+        no_of_q = len(qlist)
+        cursor = 0
+        rows = int(no_of_q / columns)
+        for i in range(rows):
+            for j in range(columns):
+                s = qlist[cursor].ljust(length_of_col)
+                file.write(s)
+                cursor += 1
+            file.write(END_OF_LINE)
         file.write(END_OF_LINE)
-    file.write(END_OF_LINE)
+
+    def convert_to_pdf(self):
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Courier", size=15)
+
+        with open(self.OUTPUT_TXT_FILE, 'r') as file:
+            for line in file:
+                pdf.cell(200, 10, txt=line, ln=1, align='L')
+
+        # t = datetime.datetime.now()
+        # date_time = t.strftime("%Y-%m-%d_%H%M")
+        # pdf.output(OUTPUT_PDF_FILE+str(date_time)+".pdf")
+        pdf.output(self.OUTPUT_PDF_FILE)
+
+    def generate_test(self):
+        file = open(self.OUTPUT_TXT_FILE, 'w')
+
+        qgen = QuestionBank()
+
+        # multiplication
+        mulQs = []
+        for i in range(48):
+            q = qgen.generator(QuestionBank.QTYPE_MUL)
+            mulQs.append(q)
+        self.output_to_text_file(mulQs, QuestionBank.QTYPE_MUL, file)
+
+        # division
+        divQs = []
+        for i in range(40):
+            q = qgen.generator(QuestionBank.QTYPE_DIV)
+            divQs.append(q)
+        self.output_to_text_file(divQs, QuestionBank.QTYPE_DIV, file)
+
+        # mixed
+        mixQs = []
+        for i in range(32):
+            q = qgen.generator(QuestionBank.QTYPE_MIX)
+            mixQs.append(q)
+        self.output_to_text_file(mixQs, QuestionBank.QTYPE_MIX, file)
+
+        file.close()
+
+        self.convert_to_pdf()
+
+# to run it locally
+# t = Test()
+# t.generate_test()
 
 
-def convert_to_pdf():
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Courier", size=15)
+# to run it on a server
+app = Flask('main')
 
-    with open(OUTPUT_TXT_FILE, 'r') as file:
-        for line in file:
-            pdf.cell(200, 10, txt=line, ln=1, align='L')
-
-    # t = datetime.datetime.now()
-    # date_time = t.strftime("%Y-%m-%d_%H%M")
-    # pdf.output(OUTPUT_PDF_FILE+str(date_time)+".pdf")
-    pdf.output(OUTPUT_PDF_FILE)
+@app.route('/')
+def pdf():
+    t = Test()
+    t.generate_test()
+    return send_file('final.pdf')
 
 
-def generate_test():
-    file = open(OUTPUT_TXT_FILE, 'w')
-
-    qgen = QuestionBank()
-
-    # multiplication
-    mulQs = []
-    for i in range(48):
-        q = qgen.generator(QuestionBank.QTYPE_MUL)
-        mulQs.append(q)
-    output_to_text_file(mulQs, QuestionBank.QTYPE_MUL, file)
-
-    # division
-    divQs = []
-    for i in range(40):
-        q = qgen.generator(QuestionBank.QTYPE_DIV)
-        divQs.append(q)
-    output_to_text_file(divQs, QuestionBank.QTYPE_DIV, file)
-
-    # mixed
-    mixQs = []
-    for i in range(32):
-        q = qgen.generator(QuestionBank.QTYPE_MIX)
-        mixQs.append(q)
-    output_to_text_file(mixQs, QuestionBank.QTYPE_MIX, file)
-
-    file.close()
-
-    convert_to_pdf()
+app.run()
 
 
-generate_test()
+
