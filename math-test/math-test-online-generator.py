@@ -1,3 +1,5 @@
+from flask import *
+import os
 from random import *
 import datetime
 from fpdf import FPDF
@@ -64,8 +66,9 @@ class QuestionBank:
         return invalid
 
 
-OUTPUT_TXT_FILE = 'temp.txt'
-OUTPUT_PDF_FILE = 'final.pdf'
+OUTPUT_TXT_FILE = "temp.txt"
+# OUTPUT_PDF_FILE = 'final_test_'
+OUTPUT_PDF_FILE = "final.pdf"
 LEN_OF_COL = 10
 LEN_OF_COL_MIX = 12
 
@@ -107,7 +110,6 @@ def convert_to_pdf():
     # pdf.output(OUTPUT_PDF_FILE+str(date_time)+".pdf")
     pdf.output(OUTPUT_PDF_FILE)
 
-
 def generate_test():
     file = open(OUTPUT_TXT_FILE, 'w')
 
@@ -139,4 +141,8 @@ def generate_test():
     convert_to_pdf()
 
 
-generate_test()
+app = Flask('main')
+@app.route('/')
+def pdf():
+    return send_file('final.pdf')
+app.run()
