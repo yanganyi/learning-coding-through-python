@@ -154,8 +154,8 @@ def pdf():
     t.generate_test()
     return send_file('final.pdf')
 
-
-app.run()
+# app.run()
+app.run(host='0.0.0.0', port=8001)
 
 
 
