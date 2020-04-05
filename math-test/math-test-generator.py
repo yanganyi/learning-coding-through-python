@@ -149,7 +149,7 @@ class Test:
 app = Flask('main')
 
 @app.route('/')
-def pdf():
+def welcome():
     return "Hello world!"
 
 @app.route('/test')
